@@ -6,20 +6,21 @@ const server = Hapi.server({
   port: 3000,
   host: `localhost`
 });
+
 mongoose.connect("mongodb://localhost/test");
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
   console.log("we're connected!");
 });
-const schema = mongoose.Schema;
-const teamSchema = new schema({
+
+const teamSchema = new mongoose.Schema({
   name: String,
   players: [{ name: String }],
   points: Number
 });
 
-const Team = new mongoose.model("Team", teamSchema);
+const Team = mongoose.model("Team", teamSchema);
 const team = new Team({
   name: "Ninja Warriors",
   players: [{ name: "Ashish" }, { name: "Tarun" }],
