@@ -1,3 +1,13 @@
+const mongoose = require("mongoose");
+
+const teamSchema = new mongoose.Schema({
+  name: String,
+  players: [{ name: String }],
+  points: Number
+});
+
+const Team = mongoose.model("Team", teamSchema);
+
 const routes = [
   {
     method: "GET",
@@ -10,14 +20,17 @@ const routes = [
     method: "GET",
     path: "/api/v1/teams",
     handler: (req, h) => {
-      return "Here are all your teams.";
+      Team.find({}, (err, teams) => {
+        if (err) return h.send({});
+        return h.send(teams);
+      });
     }
   },
   {
     method: "GET",
     path: `/api/v1/teams/{tname}`,
     handler: (req, h) => {
-      return `Details of team ${encodeURIComponent(req.params.tname)}`;
+      return Team.findOne({ name: req.params.tname });
     }
   },
   {
